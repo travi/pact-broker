@@ -7,3 +7,17 @@ initially to define the contract between my [api](https://github.com/travi/travi
 and the [admin web-app](https://github.com/travi/travi.org-admin) (consumer)
 
 ![network graph](graph.png)
+
+## Local development
+
+### Install dependencies
+
+```
+$ bundle install
+```
+
+### Start the broker
+
+```
+$ heroku local
+```
