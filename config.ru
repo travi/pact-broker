@@ -4,8 +4,19 @@ require 'sequel'
 require 'pact_broker'
 require 'pg'
 
-use Rack::Auth::Basic, "Restricted Area" do |username, password|
-  username == ENV['PACT_BROKER_USERNAME'] and password == ENV['PACT_BROKER_PASSWORD']
+class BasicAuthForModifyingMethods
+  def initialize(app, &block)
+    @app = app
+    @app_with_basic_auth = Rack::Auth::Basic.new(app, &block)
+  end
+
+  def call(env)
+    if env['REQUEST_METHOD'] == 'GET'
+      @app.call(env)
+    else
+      @app_with_basic_auth.call(env)
+    end
+  end
 end
 
 app = PactBroker::App.new do | config |
@@ -16,4 +27,8 @@ app = PactBroker::App.new do | config |
   config.database_connection = Sequel.connect(ENV['DATABASE_URL'], adapter: "postgres", encoding: 'utf8')
 end
 
-run app
+app_with_auth = BasicAuthForModifyingMethods.new(app) do |username, password|
+  username == ENV['PACT_BROKER_USERNAME'] and password == ENV['PACT_BROKER_PASSWORD']
+end
+
+run app_with_auth
