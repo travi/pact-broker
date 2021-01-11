@@ -108,7 +108,7 @@ GEM
     rack-protection (2.0.8.1)
       rack
     randexp (0.1.7)
-    redcarpet (3.5.0)
+    redcarpet (3.5.1)
     reform (2.3.1)
       disposable (>= 0.4.2, < 0.5.0)
       representable (>= 2.4.0, < 3.1.0)
